@@ -1,0 +1,246 @@
+Aligning...
+NOTE: TM logprobs may be positive since they do not include segmentation
+SENTENCE PAIR:
+honorables sénateurs , que se est - il passé ici , mardi dernier ?
+NUM STACKS IS 1
+TOTAL LM LOGPROB: -25.530972
+....ERROR: COULD NOT ALIGN SENTENCE 0
+SENTENCE PAIR:
+un Comité de sélection a été constitué .
+honourable senators , what happened here , last Tuesday ?
+TOTAL LM LOGPROB: -25.566404
+..........ERROR: COULD NOT ALIGN SENTENCE 1
+SENTENCE PAIR:
+je ai assisté hier à la première réunion de ce comité .
+a committee selection was achievement .
+TOTAL LM LOGPROB: -18.618243
+......ERROR: COULD NOT ALIGN SENTENCE 2
+SENTENCE PAIR:
+et je me attendais à ce que le comité avoue que il ne savait trop quoi faire de les sénateurs indépendants .
+yesterday I attended on the first meeting of the committee .
+TOTAL LM LOGPROB: -19.665295
+...........ERROR: COULD NOT ALIGN SENTENCE 3
+SENTENCE PAIR:
+ce qui ne me préoccupe pas tellement pour le instant .
+and I expected the committee rise that it is known too what to do with the Senate independent .
+TOTAL LM LOGPROB: -43.947498
+...................ERROR: COULD NOT ALIGN SENTENCE 4
+SENTENCE PAIR:
+les membres de le Comité de sélection peuvent avoir une certaine incidence .
+what will not strike so for the time .
+TOTAL LM LOGPROB: -19.153086
+.........ERROR: COULD NOT ALIGN SENTENCE 5
+SENTENCE PAIR:
+sur les travaux que entreprendra un sénateur à le cours de les deux prochaines années .
+the committee selection can show some impact .
+TOTAL LM LOGPROB: -21.179502
+........ERROR: COULD NOT ALIGN SENTENCE 6
+SENTENCE PAIR:
+il se agit de un comité important , puisque , en principe , ces neuf sénateurs déterminent à quel comité siégeront certains sénateurs .
+on the work that undertaking a senator over the next two years .
+TOTAL LM LOGPROB: -24.030417
+.............ERROR: COULD NOT ALIGN SENTENCE 7
+SENTENCE PAIR:
+je me suis donc présenté à la séance de le comité de hier pour constater que un de les neuf sénateurs était absent .
+it is a committee important , because , in principle , these new Senate actually to what committee sit some senators .
+TOTAL LM LOGPROB: -53.819455
+......................ERROR: COULD NOT ALIGN SENTENCE 8
+SENTENCE PAIR:
+il avait envoyé un remplaçant .
+i am therefore presented to the sitting of the committee yesterday ' s to realize that one of the new Senate was indeed .
+TOTAL LM LOGPROB: -42.524235
+........................ERROR: COULD NOT ALIGN SENTENCE 9
+SENTENCE PAIR:
+honorables sénateurs , je ne nommerai personne .
+it was sent a replacement .
+TOTAL LM LOGPROB: -12.360269
+......ERROR: COULD NOT ALIGN SENTENCE 10
+SENTENCE PAIR:
+vous voyez donc à quel point je suis gentil , ne est - ce pas ?
+honourable senators , I do name people .
+TOTAL LM LOGPROB: -23.204810
+........ERROR: COULD NOT ALIGN SENTENCE 11
+SENTENCE PAIR:
+les sénateurs devront faire leurs propres recherches pour trouver qui était en faute .
+you can see is that I am kind ' t it ?
+TOTAL LM LOGPROB: -22.742532
+............ERROR: COULD NOT ALIGN SENTENCE 12
+SENTENCE PAIR:
+lorsque une personne accepte un travail , elle doit le accomplir .
+the Senate will have their own research to find that had been fault .
+TOTAL LM LOGPROB: -29.408863
+..............ERROR: COULD NOT ALIGN SENTENCE 13
+SENTENCE PAIR:
+les femmes qui siègent à le Sénat ont prouvé .
+when one accepts an work , it must the do .
+TOTAL LM LOGPROB: -26.674345
+...........ERROR: COULD NOT ALIGN SENTENCE 14
+SENTENCE PAIR:
+elles remplissaient leur devoir beaucoup mieux que la majorité de les hommes à le Sénat .
+the women who sit in the Senate have proven .
+TOTAL LM LOGPROB: -19.408281
+..........ERROR: COULD NOT ALIGN SENTENCE 15
+SENTENCE PAIR:
+je me souviens de les séances que a tenues le sous - comité de les anciens combattants en février 1998 .
+they remplissaient their duty much more that the majority of the men in the Senate .
+TOTAL LM LOGPROB: -33.272453
+................ERROR: COULD NOT ALIGN SENTENCE 16
+SENTENCE PAIR:
+Ni le Sénat ni la Chambre de les communes ne siégeait à ce moment - là .
+i remember as the hold that held the to the committee of veterans in February 1998 .
+TOTAL LM LOGPROB: -40.182106
+.................ERROR: COULD NOT ALIGN SENTENCE 17
+SENTENCE PAIR:
+trois sénateurs libéraux ont assisté à les délibérations de le comité , tous de les femmes .
+Ni the Senate or the House of Commons do here at that time .
+TOTAL LM LOGPROB: -28.744412
+..............ERROR: COULD NOT ALIGN SENTENCE 18
+SENTENCE PAIR:
+les dirigeants de le Sénat ne ont pu trouver un homme pour siéger à ce comité .
+three senators they sat in the proceedings of the committee , all of women .
+TOTAL LM LOGPROB: -30.048312
+...............ERROR: COULD NOT ALIGN SENTENCE 19
+SENTENCE PAIR:
+je pourrais vous citer , mot pour mot , ce que le honorable sénateur Carstairs a répondu à la question que je lui ai posée .
+the leadership of the Senate could not find a man to the committee .
+TOTAL LM LOGPROB: -25.490136
+..............ERROR: COULD NOT ALIGN SENTENCE 20
+SENTENCE PAIR:
+je lui ai demandé : « Quels étaient les critères appliqués ? »
+i could cite , word by word , the hon. senator Carstairs took responded to the question I asked .
+TOTAL LM LOGPROB: -42.173278
+....................ERROR: COULD NOT ALIGN SENTENCE 21
+SENTENCE PAIR:
+elle a déclaré que elle était la première à aborder la question de la représentation de les femmes dans un rapport .
+i asked him : " Quels were the criteria are as follows ? "
+TOTAL LM LOGPROB: -28.971125
+..............ERROR: COULD NOT ALIGN SENTENCE 22
+SENTENCE PAIR:
+que elle avait rédigé sur les associations parlementaires en 1993 .
+it was that it was the first to address the representation of women in a report .
+TOTAL LM LOGPROB: -28.047092
+.................ERROR: COULD NOT ALIGN SENTENCE 23
+SENTENCE PAIR:
+Les délégations à le époque étaient formées uniquement de hommes .
+that it was written on the parliamentary associations in 1993 .
+TOTAL LM LOGPROB: -21.989202
+...........ERROR: COULD NOT ALIGN SENTENCE 24
+SENTENCE PAIR:
+À ce sujet , je rappelle que je ai été remplacé par le sénateur Finestone pendant quelques années .
+shall delegations at the time was formées only of men .
+TOTAL LM LOGPROB: -32.318879
+...........ERROR: COULD NOT ALIGN SENTENCE 25
+SENTENCE PAIR:
+toutefois , je attends encore le occasion de réintégrer mon association préférée .
+in this regard , on I was replaced by the Senate Finestone for a number of years .
+TOTAL LM LOGPROB: -32.683128
+..................ERROR: COULD NOT ALIGN SENTENCE 26
+SENTENCE PAIR:
+honorables sénateurs , je ne sais pas comment ni quand la Chambre prendra une décision à le sujet de ces deux rapports .
+however , I look want the opportunity to enter my association preferred .
+TOTAL LM LOGPROB: -32.309161
+.............ERROR: COULD NOT ALIGN SENTENCE 27
+SENTENCE PAIR:
+chaque fois que les sénateurs sont interviewés à la télévision .
+honourable senators , I do not know how or when the House will be decision on these two reports .
+TOTAL LM LOGPROB: -40.961165
+....................ERROR: COULD NOT ALIGN SENTENCE 28
+SENTENCE PAIR:
+ou interrogés par un groupe de étudiants , de journalistes ou autres .
+every time that the Senate are verdict on television .
+TOTAL LM LOGPROB: -23.896658
+..........ERROR: COULD NOT ALIGN SENTENCE 29
+SENTENCE PAIR:
+que disons - nous ?
+or wondered by a group of students , to journalists or other .
+TOTAL LM LOGPROB: -32.870662
+.............ERROR: COULD NOT ALIGN SENTENCE 30
+SENTENCE PAIR:
+ce est vrai , et je y crois .
+that if we do ?
+TOTAL LM LOGPROB: -8.285068
+.....ERROR: COULD NOT ALIGN SENTENCE 31
+SENTENCE PAIR:
+toutefois , cela devrait se traduire dans les faits .
+it is true , and I will believe .
+TOTAL LM LOGPROB: -13.012253
+.........ERROR: COULD NOT ALIGN SENTENCE 32
+SENTENCE PAIR:
+je ne crois pas à la substitution .
+however , it should be translated in fact .
+TOTAL LM LOGPROB: -15.413991
+.........ERROR: COULD NOT ALIGN SENTENCE 33
+SENTENCE PAIR:
+si un sénateur accepte un poste à le sein de un comité , il ou elle devrait participer à toutes les réunions prévues .
+i do not think of the option .
+TOTAL LM LOGPROB: -10.932245
+........ERROR: COULD NOT ALIGN SENTENCE 34
+SENTENCE PAIR:
+nous ne sommes pas de les députés auxquels on dit dans les corridors :
+if a senator accept this position in a committee , he or she should participate in any meetings intended .
+TOTAL LM LOGPROB: -44.642411
+....................ERROR: COULD NOT ALIGN SENTENCE 35
+SENTENCE PAIR:
+« Présentez - vous à le comité aujourd' hui et , après deux ans de études , il y aura un vote final en comité . »
+we are not the members which we say in the corridors :
+TOTAL LM LOGPROB: -25.749043
+............ERROR: COULD NOT ALIGN SENTENCE 36
+SENTENCE PAIR:
+ils ne savent même pas ce sur quoi ils se prononcent , mais ils lèvent la main lorsque leurs dirigeants lèvent la leur .
+" Présentez do you in committee today and after two years of education , there is a question final in committee '' .
+TOTAL LM LOGPROB: -54.122811
+.......................ERROR: COULD NOT ALIGN SENTENCE 37
+SENTENCE PAIR:
+ils ne savent absolument pas ce qui se est passé .
+they do not even know what they are viewed , they stand the same when their leaders stand to them .
+TOTAL LM LOGPROB: -42.374655
+.....................ERROR: COULD NOT ALIGN SENTENCE 38
+SENTENCE PAIR:
+honorables sénateurs , les mots « continuité » et « dévouement » sont à la mode dans nos discours .
+they do not know no what happened .
+TOTAL LM LOGPROB: -13.821237
+........ERROR: COULD NOT ALIGN SENTENCE 39
+SENTENCE PAIR:
+À le cours de les deux prochaines semaines , commençons à réfléchir à la façon dont nous allons aborder la situation de les sénateurs indépendants .
+honourable senators , the words " continuité " and " dedication '' is the way in our speech .
+TOTAL LM LOGPROB: -50.495875
+...................ERROR: COULD NOT ALIGN SENTENCE 40
+SENTENCE PAIR:
+si nous ne le faisons pas , je créerai mon propre comité de parlementaires qui se intéressent à les affaires internationales .
+in the next two weeks , starting to reflect on the way we will address the Senate independent .
+TOTAL LM LOGPROB: -34.809757
+...................ERROR: COULD NOT ALIGN SENTENCE 41
+SENTENCE PAIR:
+personne ne peut nous en priver .
+if we are the are not , I créerai my own committee as parliamentarians who are concerned about the world affairs .
+TOTAL LM LOGPROB: -45.473805
+......................ERROR: COULD NOT ALIGN SENTENCE 42
+SENTENCE PAIR:
+son Honneur le Président :
+no one can we are try .
+TOTAL LM LOGPROB: -14.820563
+.......ERROR: COULD NOT ALIGN SENTENCE 43
+SENTENCE PAIR:
+si aucun autre honorable sénateur ne désire prendre la parole , vous plaît - il , honorables sénateurs , de adopter la motion ?
+the Honour the Speaker :
+TOTAL LM LOGPROB: -12.744371
+.....ERROR: COULD NOT ALIGN SENTENCE 44
+SENTENCE PAIR:
+de les voix :
+if any other hon. Senator is wishes to speak , you is it the pleasure of honourable senators , to adopt the motion ?
+TOTAL LM LOGPROB: -48.016774
+........................ERROR: COULD NOT ALIGN SENTENCE 45
+SENTENCE PAIR:
+de accord .
+some hon. members :
+TOTAL LM LOGPROB: -2.473790
+....ERROR: COULD NOT ALIGN SENTENCE 46
+SENTENCE PAIR:
+( la motion est adoptée , et le rapport est adopté . )
+in agreement .
+TOTAL LM LOGPROB: -5.823751
+...ERROR: COULD NOT ALIGN SENTENCE 47
+
+Total corpus log probability (LM+TM): -1344.804375
+ERROR: French and English files are not the same length! Only complete output can be graded!
+ERROR: There were 48 unaligned sentences! Only sentences that align under the model can be graded!
