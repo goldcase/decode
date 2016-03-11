@@ -54,13 +54,15 @@ def decode():
                                 stacks[j][lm_state] = new_hypothesis
         winner = max(stacks[-1].itervalues(), key=lambda h: h.logprob)
         english_phrases = []
+        tm_logprob_phrases = []
         def extract_english(h):
             if h.predecessor is not None:
                 english_phrases.insert(0, (h.phrase.english, h.i, h.j, h.f))
+                tm_logprob_phrases.insert(0, h.phrase.logprob)
 
             return "" if h.predecessor is None else "%s%s " % (extract_english(h.predecessor), h.phrase.english)
 
-        ret.append((extract_english(winner), english_phrases))
+        ret.append((extract_english(winner), english_phrases, tm_logprob_phrases))
 
         if opts.verbose:
             def extract_tm_logprob(h):
@@ -71,4 +73,4 @@ def decode():
     return ret
 
 if __name__ == "__main__":
-    print decode()
+    decode()
