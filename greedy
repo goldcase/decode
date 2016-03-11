@@ -5,6 +5,7 @@ import models
 import math
 import seed_decode
 import random
+import numpy as np
 
 # Three little utility functions:
 def bitmap(sequence):
@@ -49,7 +50,23 @@ def maybe_write(s, verbosity):
         sys.stdout.write(s)
         sys.stdout.flush()
 
-def replace(aligned_phrases):
+def replace_phrase(aligned_phrase):
+    #print "Entering replace_phrase() with " + str(aligned_phrase)
+    ret = aligned_phrase
+
+    english_phrase, start_idx, end_idx, foreign_sentence = aligned_phrase
+
+    # Select alternate translation from the translation model.
+    source_phrase   = foreign_sentence[start_idx:end_idx]
+    replaced_phrase = english_phrase
+
+    if source_phrase in tm:
+        while replaced_phrase == english_phrase:
+            replaced_phrase = random.choice(tm[source_phrase])
+
+    return replaced_phrase.english, start_idx, end_idx, foreign_sentence
+
+def replace_uno(aligned_phrases):
     """
     Returns the list of English phrases with one entry replaced by another
     possible translation from the translation model.
@@ -57,24 +74,23 @@ def replace(aligned_phrases):
     Parameters
     ----------
     """
-    return [replace_phrase(x) for x in aligned_phrases]
+    ret = []
 
-def replace_phrase(aligned_phrase):
-    print "Entering replace_phrase() with " + str(aligned_phrase)
-    ret = aligned_phrase
+    for i in xrange(len(aligned_phrases)):
+        temp = []
+        for j in xrange(len(aligned_phrases)):
+            current_phrase = aligned_phrases[j]
 
-    english_phrase, start_idx, end_idx, foreign_sentence = aligned_phrase
+            if i == j:
+                temp.append(replace_phrase(current_phrase))
+            else:
+                temp.append(current_phrase)
 
-    # Select alternate translation from the translation model.
-    source_phrase = foreign_sentence[start_idx:end_idx]
-    replaced_phrase = english_phrase
-    if source_phrase in tm:
-        while replaced_phrase == english_phrase:
-            replaced_phrase = random.choice(tm[source_phrase])
+        ret.append(temp)
 
-    return replaced_phrase, start_idx, end_idx, foreign_sentence
+    return ret
 
-print replace(decoded_phrase_alignments[0])
+print replace_max(decoded_phrase_alignments[0])
 
 maybe_write("Aligning...\n",0)
 maybe_write("NOTE: TM logprobs may be positive since they do not include segmentation\n",0)
