@@ -60,11 +60,11 @@ def replace_phrase(aligned_phrase):
     source_phrase   = foreign_sentence[start_idx:end_idx]
     replaced_phrase = english_phrase
 
-    if source_phrase in tm:
+    if source_phrase in tm and len(tm[source_phrase]) > 1:
         while replaced_phrase == english_phrase:
-            replaced_phrase = random.choice(tm[source_phrase])
+            replaced_phrase = random.choice(tm[source_phrase]).english
 
-    return replaced_phrase.english, start_idx, end_idx, foreign_sentence
+    return replaced_phrase, start_idx, end_idx, foreign_sentence
 
 def replace_uno(aligned_phrases):
     """
@@ -90,86 +90,164 @@ def replace_uno(aligned_phrases):
 
     return ret
 
-print replace_max(decoded_phrase_alignments[0])
+def swap_pair(aligned_phrases):
+    ret = []
+    for i in xrange(len(aligned_phrases)):
+        temp = []
 
-maybe_write("Aligning...\n",0)
-maybe_write("NOTE: TM logprobs may be positive since they do not include segmentation\n",0)
-total_logprob = 0.0
-unaligned_sentences = 0
-for sent_num, (f, e) in enumerate(zip(french, english)):
-    maybe_write("===========================================================\n",1)
-    maybe_write("SENTENCE PAIR:\n%s\n%s\n" % (" ".join(f), " ".join(e)),0)
+        for j in xrange(len(aligned_phrases) - 1):
+            if i == j:
+                a = aligned_phrases[i]
+                b = aligned_phrases[i+1]
 
-    maybe_write("\nLANGUAGE MODEL SCORES:\n",1)
+                new_a = (b[0], a[1:])
+                new_b = (a[0], b[1:])
+                temp.append(new_a)
+                temp.append(new_b)
+
+            elif j == i + 1:
+                continue
+            else:
+                temp.append(aligned_phrases[j])
+
+        if i != len(aligned_phrases) - 2:
+            temp.append(aligned_phrases[-1])
+
+        ret.append(temp)
+
+    return ret
+
+def score_phrase(phrases):
+    temp = []
+    for p in phrases:
+        temp.append(p[0])
+
+    return score((" ".join(temp)).split(" ")) 
+
+def score(e):
+    assert(type(e) is list)
     lm_state = lm.begin()
     lm_logprob = 0.0
-    for word in e + ("</s>",):
-        maybe_write("%s: " % " ".join(lm_state + (word,)),1)
+    for word in e + ["</s>"]:
         (lm_state, word_logprob) = lm.score(lm_state, word)
         lm_logprob += word_logprob
-        maybe_write("%f\n" % (word_logprob,),1)
-    maybe_write("TOTAL LM LOGPROB: %f\n" % lm_logprob,0)
-    total_logprob += lm_logprob
+    return lm_logprob
 
-    maybe_write("\nALL POSSIBLE PHRASE-TO-PHRASE ALIGNMENTS:\n",1)
-    alignments = [[] for _ in e]
-    for fi in xrange(len(f)):
-        for fj in xrange(fi+1,len(f)+1):
-            if f[fi:fj] in tm:
-                maybe_write("f[fi:fj] is " + str(f[fi:fj]) + "\n", 1)
+def greedy_search(phrase_alignments):
+    assert(type(phrase_alignments) is list)
+    current = phrase_alignments
 
-                for phrase in tm[f[fi:fj]]:
-                    #print "Phrase: " + str(phrase)
-                    ephrase = tuple(phrase.english.split())
-                    maybe_write("ephrase is: " + str(ephrase) + "\n", 1)
-                    for ei in xrange(len(e)+1-len(ephrase)):
-                        ej = ei+len(ephrase)
-                        if ephrase == e[ei:ej]:
-                            maybe_write("%s ||| %d, %d : %d, %d ||| %s ||| %f\n" %
-                                (" ".join(f[fi:fj]), fi, fj, ei, ej, " ".join(ephrase), phrase.logprob),1)
-                            alignments[ei].append((ej, phrase.logprob, fi, fj))
+    while True:
+        # print ".",
+        s_current = score_phrase(current)
+        s = s_current
+        neighborhood = replace_uno(current)
+        swaps = swap_pair(current)
+        for swap in swaps:
+            neighborhood.append(swap)
 
-    # Compute sum of probability of all possible alignments by dynamic programming.
-    # To do this, recursively compute the sum over all possible alignments for each
-    # each pair of English prefix (indexed by ei) and French coverage (indexed by
-    # bitmap v), working upwards from the base case (ei=0, v=0) [i.e. forward chaining].
-    # The final sum is the one obtained for the pair (ei=len(e), v=range(len(f))
-    maybe_write("\nDYNAMIC PROGRAMMING SUM OVER ALIGNMENTS\n",2)
-    chart = [{} for _ in e] + [{}]
-    chart[0][0] = 0.0
-    for ei, sums in enumerate(chart[:-1]):
-        for v in sums:
-            for ej, logprob, fi, fj in alignments[ei]:
-                if bitmap(range(fi,fj)) & v == 0:
-                    new_v = bitmap(range(fi,fj)) | v
-                    maybe_write("ei, bitmap2str(v,len(f)), sums[v], ei, \n\
-ej, bitmap2str(bitmap(range(fi,fj)),len(f)), logprob,\n\
-ej, bitmap2str(new_v,len(f)), sums[v]+logprob)\n\n", 2)
-                    maybe_write("(%d, %s): %f + (%d, %d, %s): %f -> (%d, %s): %f\n\n\n" %
-                        (ei, bitmap2str(v,len(f)), sums[v],
-                         ei, ej, bitmap2str(bitmap(range(fi,fj)),len(f)), logprob,
-                         ej, bitmap2str(new_v,len(f)), sums[v]+logprob), 2)
-                    if new_v in chart[ej]:
-                        chart[ej][new_v] = logadd10(chart[ej][new_v], sums[v]+logprob)
-                    else:
-                        chart[ej][new_v] = sums[v]+logprob
-        maybe_write(".",0)
-        maybe_write("\n",2)
-    goal = bitmap(range(len(f)))
-    if goal in chart[len(e)]:
-        maybe_write("\nTOTAL TM LOGPROB: %f\n" % chart[len(e)][goal],0)
-        total_logprob += chart[len(e)][goal]
-    else:
-        sys.stdout.write("ERROR: COULD NOT ALIGN SENTENCE %d\n" % sent_num)
-        unaligned_sentences += 1
-    maybe_write("\n\n",2)
+        best = None
+        for h in neighborhood:
+            c = score_phrase(h)
+            if c > s:
+                s = c
+                best = h
 
-sys.stdout.write("\nTotal corpus log probability (LM+TM): %f\n" % total_logprob)
-if (len(french) != len(english)):
-    sys.stdout.write("ERROR: French and English files are not the same length! Only complete output can be graded!\n")
-if unaligned_sentences > 0:
-    sys.stdout.write("ERROR: There were %d unaligned sentences! Only sentences that align under the model can be graded!\n" % unaligned_sentences)
-if (len(french) != len(english)) or unaligned_sentences > 0:
-    sys.exit(1) # signal problem to caller
+        if s == s_current:
+            return current
+
+        current = best
+
+def pretty_print(phrase_alignments):
+    return " ".join([x[0] for x in phrase_alignments])
+
+for phrase in decoded_phrase_alignments:
+    print pretty_print(greedy_search(phrase))
+# for p in decoded_phrase_alignments[0]:
+#     print p[0], "|", " ",
+# print 
+# print "Original: ", pretty_print(decoded_phrase_alignments[0])
+# for i in swap_pair(decoded_phrase_alignments[0]):
+#     print pretty_print(i)
+
+# maybe_write("Aligning...\n",0)
+# maybe_write("NOTE: TM logprobs may be positive since they do not include segmentation\n",0)
+# total_logprob = 0.0
+# unaligned_sentences = 0
+# for sent_num, (f, e) in enumerate(zip(french, english)):
+#     maybe_write("===========================================================\n",1)
+#     maybe_write("SENTENCE PAIR:\n%s\n%s\n" % (" ".join(f), " ".join(e)),0)
+
+#     maybe_write("\nLANGUAGE MODEL SCORES:\n",1)
+#     lm_state = lm.begin()
+#     lm_logprob = 0.0
+#     for word in e + ("</s>",):
+#         maybe_write("%s: " % " ".join(lm_state + (word,)),1)
+#         (lm_state, word_logprob) = lm.score(lm_state, word)
+#         lm_logprob += word_logprob
+#         maybe_write("%f\n" % (word_logprob,),1)
+#     maybe_write("TOTAL LM LOGPROB: %f\n" % lm_logprob,0)
+#     total_logprob += lm_logprob
+
+#     maybe_write("\nALL POSSIBLE PHRASE-TO-PHRASE ALIGNMENTS:\n",1)
+#     alignments = [[] for _ in e]
+#     for fi in xrange(len(f)):
+#         for fj in xrange(fi+1,len(f)+1):
+#             if f[fi:fj] in tm:
+#                 maybe_write("f[fi:fj] is " + str(f[fi:fj]) + "\n", 1)
+
+#                 for phrase in tm[f[fi:fj]]:
+#                     #print "Phrase: " + str(phrase)
+#                     ephrase = tuple(phrase.english.split())
+#                     maybe_write("ephrase is: " + str(ephrase) + "\n", 1)
+#                     for ei in xrange(len(e)+1-len(ephrase)):
+#                         ej = ei+len(ephrase)
+#                         if ephrase == e[ei:ej]:
+#                             maybe_write("%s ||| %d, %d : %d, %d ||| %s ||| %f\n" %
+#                                 (" ".join(f[fi:fj]), fi, fj, ei, ej, " ".join(ephrase), phrase.logprob),1)
+#                             alignments[ei].append((ej, phrase.logprob, fi, fj))
+
+#     # Compute sum of probability of all possible alignments by dynamic programming.
+#     # To do this, recursively compute the sum over all possible alignments for each
+#     # each pair of English prefix (indexed by ei) and French coverage (indexed by
+#     # bitmap v), working upwards from the base case (ei=0, v=0) [i.e. forward chaining].
+#     # The final sum is the one obtained for the pair (ei=len(e), v=range(len(f))
+#     maybe_write("\nDYNAMIC PROGRAMMING SUM OVER ALIGNMENTS\n",2)
+#     chart = [{} for _ in e] + [{}]
+#     chart[0][0] = 0.0
+#     for ei, sums in enumerate(chart[:-1]):
+#         for v in sums:
+#             for ej, logprob, fi, fj in alignments[ei]:
+#                 if bitmap(range(fi,fj)) & v == 0:
+#                     new_v = bitmap(range(fi,fj)) | v
+#                     maybe_write("ei, bitmap2str(v,len(f)), sums[v], ei, \n\
+# ej, bitmap2str(bitmap(range(fi,fj)),len(f)), logprob,\n\
+# ej, bitmap2str(new_v,len(f)), sums[v]+logprob)\n\n", 2)
+#                     maybe_write("(%d, %s): %f + (%d, %d, %s): %f -> (%d, %s): %f\n\n\n" %
+#                         (ei, bitmap2str(v,len(f)), sums[v],
+#                          ei, ej, bitmap2str(bitmap(range(fi,fj)),len(f)), logprob,
+#                          ej, bitmap2str(new_v,len(f)), sums[v]+logprob), 2)
+#                     if new_v in chart[ej]:
+#                         chart[ej][new_v] = logadd10(chart[ej][new_v], sums[v]+logprob)
+#                     else:
+#                         chart[ej][new_v] = sums[v]+logprob
+#         maybe_write(".",0)
+#         maybe_write("\n",2)
+#     goal = bitmap(range(len(f)))
+#     if goal in chart[len(e)]:
+#         maybe_write("\nTOTAL TM LOGPROB: %f\n" % chart[len(e)][goal],0)
+#         total_logprob += chart[len(e)][goal]
+#     else:
+#         sys.stdout.write("ERROR: COULD NOT ALIGN SENTENCE %d\n" % sent_num)
+#         unaligned_sentences += 1
+#     maybe_write("\n\n",2)
+
+# sys.stdout.write("\nTotal corpus log probability (LM+TM): %f\n" % total_logprob)
+# if (len(french) != len(english)):
+#     sys.stdout.write("ERROR: French and English files are not the same length! Only complete output can be graded!\n")
+# if unaligned_sentences > 0:
+#     sys.stdout.write("ERROR: There were %d unaligned sentences! Only sentences that align under the model can be graded!\n" % unaligned_sentences)
+# if (len(french) != len(english)) or unaligned_sentences > 0:
+#     sys.exit(1) # signal problem to caller
 
 

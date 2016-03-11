@@ -66,7 +66,7 @@ for sent_num, (f, e) in enumerate(zip(french, english)):
         maybe_write("f[fi:fj] is " + str(f[fi:fj]) + "\n", 1)
 
         for phrase in tm[f[fi:fj]]:
-          print "Phrase: " + str(phrase)
+          # print "Phrase: " + str(phrase)
           ephrase = tuple(phrase.english.split())
           maybe_write("ephrase is: " + str(ephrase) + "\n", 1)
           for ei in xrange(len(e)+1-len(ephrase)):

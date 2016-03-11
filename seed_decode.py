@@ -56,7 +56,7 @@ def decode():
         english_phrases = []
         def extract_english(h):
             if h.predecessor is not None:
-                english_phrases.append((h.phrase.english, h.i, h.j, h.f))
+                english_phrases.insert(0, (h.phrase.english, h.i, h.j, h.f))
 
             return "" if h.predecessor is None else "%s%s " % (extract_english(h.predecessor), h.phrase.english)
 
