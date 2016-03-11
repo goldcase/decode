@@ -100,8 +100,8 @@ def swap_pair(aligned_phrases):
                 a = aligned_phrases[i]
                 b = aligned_phrases[i+1]
 
-                new_a = (b[0], a[1:])
-                new_b = (a[0], b[1:])
+                new_a = (b[0], a[1], a[2], a[3])
+                new_b = (a[0], b[1], b[2], b[3])
                 temp.append(new_a)
                 temp.append(new_b)
 
@@ -139,12 +139,15 @@ def greedy_search(phrase_alignments):
 
     while True:
         # print ".",
+        # print pretty_print(current)
+        # print current
         s_current = score_phrase(current)
         s = s_current
         neighborhood = replace_uno(current)
-        swaps = swap_pair(current)
-        for swap in swaps:
-            neighborhood.append(swap)
+        # swaps = swap_pair(current)
+        # for swap in swaps:
+        #     neighborhood.append(swap)
+            # print swap
 
         best = None
         for h in neighborhood:
@@ -163,6 +166,9 @@ def pretty_print(phrase_alignments):
 
 for phrase in decoded_phrase_alignments:
     print pretty_print(greedy_search(phrase))
+    # break
+
+# print pretty_print(greedy_search(decoded_phrase_alignments[1]))
 # for p in decoded_phrase_alignments[0]:
 #     print p[0], "|", " ",
 # print 
