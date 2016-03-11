@@ -1,0 +1,104 @@
+%
+% File naaclhlt2015.tex
+%
+
+\documentclass[11pt,letterpaper]{article}
+\usepackage{naaclhlt2015}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\setlength\titlebox{6.5cm}    % Expanding the titlebox
+
+\title{HW2 Writeup: Decoding}
+
+\author{Anjali Narayan-Chen \and Johnny Chang\\
+{\tt nrynchn2@illinois.edu}, {\tt jychang3@illinois.edu}}
+
+\date{March 10, 2016}
+
+\begin{document}
+\nocite{*}
+\maketitle
+
+\section{Introduction}
+
+For this homework, we adapt the approach of~\cite{langlais2007greedy} of a local 
+greedy search algorithm. Using a predefined set of operations, the greedy search 
+proceeds by modifying the current-best translation returned by the default stack decoder
+and searching over the set of modified translations in a hill-climbing approach. If
+a better-scoring translation is found, the modified translation is returned as the system's
+prediction.
+
+\section{Algorithm}
+Given $source$, a sentence to translate, the core of the greedy search algorithm proceeds as follows:
+\begin{algorithm}
+\caption{Greedy Search}
+    \begin{algorithmic}[1]
+    \State $current \leftarrow {\tt seed}(source)$
+    \Loop
+        \State $s\_current \leftarrow {\tt score}(current)$
+        \State $s \leftarrow s\_current$
+        \ForAll{$h\in{\tt neighborhood}(current)$}
+            \State $c \leftarrow {\tt score}(h)$
+            \If{$c>s$}
+                \State $s \leftarrow c$
+                \State $best \leftarrow h$
+            \EndIf
+        \EndFor
+        \If{$s = s\_current$}
+            \Return $current$
+        \Else
+            \State $current \leftarrow best$
+        \EndIf
+    \EndLoop
+    \end{algorithmic}
+\end{algorithm}
+
+The idea behind the greedy search is to modify parts of the translation one at a time, exploring
+the search space of neighboring hypotheses in a hill-climbing fashion. The hope is that such
+modifications to the sentence output by the original stack decoder will provide search directions
+that lead to improved hypotheses.
+
+In our implementation, the function {\tt seed} that seeds the search with an initial state
+is the provided stack decoder. The scoring function, {\tt score}, is similarly defined as the
+scoring function used in the provided code, $\log p(\mathbf{f,a|e})+\log p(\mathbf{e})$. We next
+define the {\tt neighborhood} function, which takes a candidate translation as an argument and 
+returns a set of neighboring hypotheses to consider. 
+
+\subsection{Neighborhood Function}
+The neighborhood function is defined via s set of six operations that can transform a current translation,
+as defined by~\cite{langlais2007greedy}.
+
+\paragraph{Move} The \textit{move} operation allows some target phrases to move within the current translation.
+This operation is designed to target ill-formed translations resulting from postponing the processing of
+hard-to-translate segments. In our implementation of \textit{move}, whenever two adjacent source phrases
+are translated by phrases that are further than 3 words from the source indices, we consider
+moving one of the translations closer to the other.
+
+\paragraph{Swap} The \textit{swap} operation swaps two adjacent target segments. This is designed to combat
+the baseline model's strong bias toward monotonous translations.
+
+\paragraph{Replace} Given a specific source segment, the \textit{replace} operator exchanges the translation
+for that segment with anther found in the phrase translation table.
+
+\paragraph{Bi-Replace} The \textit{bi-replace} operation works similarly to \textit{replace}, allowing the
+translation of two adjacent source phrases to change simultaneously. The motivation for this is to modify 
+the sentence enough to escape a possible local maximum in the search.
+
+\paragraph{Split} The \textit{split} operation splits a given source phrase into two parts and re-translates
+the split phrases according to translations found in the phrase translation table.
+
+\paragraph{Merge} The \textit{merge} operation is the opposite of the \textit{split} operation: it allows two
+adjacent source phrases to be merged. The merged phrase then receives a new translation according to the phrase
+translation table.
+
+
+\section{Results}
+
+
+\bibliographystyle{naaclhlt2015}
+\bibliography{hw2_writeup}
+
+\end{document}
