@@ -33,11 +33,12 @@ def decode():
         # Hence all hypotheses in stacks[i] represent translations of
         # the first i words of the input sentence. You should generalize
         # this so that they can represent translations of *any* i words.
-        hypothesis = namedtuple("hypothesis", "logprob, lm_state, predecessor, phrase")
-        initial_hypothesis = hypothesis(0.0, lm.begin(), None, None)
+        hypothesis = namedtuple("hypothesis", "logprob, lm_state, predecessor, phrase, i, j, f")
+        initial_hypothesis = hypothesis(0.0, lm.begin(), None, None, 0, 0, f[0])
         stacks = [{} for _ in f] + [{}]
         stacks[0][lm.begin()] = initial_hypothesis
         for i, stack in enumerate(stacks[:-1]):
+            #print "Stack for " + str(french[i]) + ": " + str(stack) + "\n"
             for h in sorted(stack.itervalues(),key=lambda h: -h.logprob)[:opts.s]: # prune
                 for j in xrange(i+1,len(f)+1):
                     if f[i:j] in tm:
@@ -48,13 +49,18 @@ def decode():
                                 (lm_state, word_logprob) = lm.score(lm_state, word)
                                 logprob += word_logprob
                             logprob += lm.end(lm_state) if j == len(f) else 0.0
-                            new_hypothesis = hypothesis(logprob, lm_state, h, phrase)
+                            new_hypothesis = hypothesis(logprob, lm_state, h, phrase, i, j, f)
                             if lm_state not in stacks[j] or stacks[j][lm_state].logprob < logprob: # second case is recombination
                                 stacks[j][lm_state] = new_hypothesis
         winner = max(stacks[-1].itervalues(), key=lambda h: h.logprob)
+        english_phrases = []
         def extract_english(h):
+            if h.predecessor is not None:
+                english_phrases.append((h.phrase.english, h.i, h.j, h.f))
+
             return "" if h.predecessor is None else "%s%s " % (extract_english(h.predecessor), h.phrase.english)
-        ret.append(extract_english(winner))
+
+        ret.append((extract_english(winner), english_phrases))
 
         if opts.verbose:
             def extract_tm_logprob(h):
@@ -63,3 +69,6 @@ def decode():
             sys.stderr.write("LM = %f, TM = %f, Total = %f\n" %
                 (winner.logprob - tm_logprob, tm_logprob, winner.logprob))
     return ret
+
+if __name__ == "__main__":
+    print decode()

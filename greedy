@@ -27,13 +27,16 @@ optparser.add_option("-l", "--language-model", dest="lm", default="data/lm",
                                          help="File containing ARPA-format language model (default=data/lm)")
 optparser.add_option("-v", "--verbosity", dest="verbosity", default=1, type="int",
                                          help="Verbosity level, 0-3 (default=1)")
-opts = optparser.parse_args()[0]
-decoded = seed_decode.decode()
+
+opts                      = optparser.parse_args()[0]
+decoded                   = seed_decode.decode()
+decoded_english_sentences = [x[0] for x in decoded]
+decoded_phrase_alignments = [x[1] for x in decoded]
 
 tm = models.TM(opts.tm,sys.maxint)
 lm = models.LM(opts.lm)
 french = [tuple(line.strip().split()) for line in open(opts.input).readlines()]
-english = [tuple(line.strip().split()) for line in decoded]
+english = [tuple(line.strip().split()) for line in decoded_english_sentences]
 
 # tm should translate unknown words as-is with probability 1
 for word in set(sum(french,())):
