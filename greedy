@@ -6,6 +6,7 @@ import math
 import seed_decode
 import random
 import numpy as np
+import copy
 
 # Three little utility functions:
 # def bitmap(sequence):
@@ -28,7 +29,7 @@ optparser.add_option("-t", "--translation-model", dest="tm", default="data/tm",
 optparser.add_option("-l", "--language-model", dest="lm", default="data/lm",
                                          help="File containing ARPA-format language model (default=data/lm)")
 optparser.add_option("-n", "--num_sentences", dest="num_sents", default=sys.maxint, type="int", help="Number of sentences to decode (default=no limit)")
-optparser.add_option("-v", "--verbosity", dest="verbosity", default=1, type="int",
+optparser.add_option("-v", "--verbosity", dest="verbosity", default=0, type="int",
                                          help="Verbosity level, 0-3 (default=1)")
 
 opts                      = optparser.parse_args()[0]
@@ -52,15 +53,9 @@ for word in set(sum(french,())):
     if (word,) not in tm:
         tm[(word,)] = [models.phrase(word, 0.0)]
 
-# def maybe_write(s, verbosity):
-#     if opts.verbosity > verbosity:
-#         sys.stdout.write(s)
-#         sys.stdout.flush()
-
 # Helper method which replaces one translated phrase with another, if possible.
 # Force: forces replacement of a phrase even if there is only one possible translation for a phrase. Used in merge.
-def replace_phrase(aligned_phrase, force):
-    #print "Entering replace_phrase() with " + str(aligned_phrase)
+def replace_phrase(aligned_phrase, force=False):
     ret = aligned_phrase
 
     english_phrase, start_idx, end_idx, foreign_sentence = aligned_phrase
@@ -70,10 +65,11 @@ def replace_phrase(aligned_phrase, force):
     replaced_phrase = english_phrase
 
     # DEBUG: source phrase not found
-    if source_phrase not in tm and opts.verbosity > 0:
-        print "\tSource phrase ", source_phrase, "not found in translation model."
+    if source_phrase not in tm:
+        if opts.verbosity > 0: 
+            print "\tSource phrase ", source_phrase, "not found in translation model."
         return None
-
+                                                     
     # DEBUG: source phrase only has one possible translation
     if len(tm[source_phrase]) == 1 and opts.verbosity > 0:
         print "\tOnly one translation found for source phrase ", source_phrase, ": ", english_phrase
@@ -82,7 +78,7 @@ def replace_phrase(aligned_phrase, force):
     if source_phrase in tm and (len(tm[source_phrase]) > 1 or force):
         while replaced_phrase == english_phrase:
             replaced_phrase = random.choice(tm[source_phrase]).english
-            if len(tm[source_phrase] == 1) and force:
+            if force and len(tm[source_phrase]) == 1:
                 break
 
     return replaced_phrase, start_idx, end_idx, foreign_sentence
@@ -101,7 +97,7 @@ def replace(aligned_phrases):
 
             # Replace one phrase and keep the others.
             if i == j:
-                new_phrase = replace_phrase(current_phrase, False)
+                new_phrase = replace_phrase(current_phrase)
                 assert new_phrase is not None
                 temp.append(new_phrase)
             else:
@@ -126,11 +122,10 @@ def bireplace(aligned_phrases):
         temp = []
 
         for j in xrange(len(aligned_phrases)):
-
             # Replace two phrases.
             if i == j:
-                new_phrase_a = replace_phrase(aligned_phrases[i], False)
-                new_phrase_b = replace_phrase(aligned_phrases[i+1], False)
+                new_phrase_a = replace_phrase(aligned_phrases[i])
+                new_phrase_b = replace_phrase(aligned_phrases[i+1])
                 assert new_phrase_a is not None and new_phrase_b is not None
                 temp.append(new_phrase_a)
                 temp.append(new_phrase_b)
@@ -152,6 +147,7 @@ def bireplace(aligned_phrases):
 
     return ret
 
+# Returns list of English phrases with adjacent phrases merged.
 def merge(aligned_phrases):
     ret = []
 
@@ -159,7 +155,6 @@ def merge(aligned_phrases):
         temp = []
 
         for j in xrange(len(aligned_phrases)):
-
             # Merge two phrases.
             if i == j:
                 a = aligned_phrases[i]
@@ -172,10 +167,6 @@ def merge(aligned_phrases):
                 else:
                     temp.append(a)
                     temp.append(b)
-
-                # if 
-                # temp.append(replace_phrase(aligned_phrases[i]))
-                # temp.append(replace_phrase(aligned_phrases[i+1]))
 
             elif j == i + 1:
                 continue
@@ -194,6 +185,101 @@ def merge(aligned_phrases):
 
     return ret
 
+# Helper function that splits a given phrase in all possible combinations
+# and returns list of phrase tuples that come about from the random replacement
+# of the split phrases.
+def split_phrase(aligned_phrase):
+    ret = []
+
+    english_phrase, start_idx, end_idx, foreign_sentence = aligned_phrase
+
+    # Attempt to split the phrase in all possible ways, and replace each sub-phrase
+    # using the randomized replace function defined earlier.
+    for i in xrange(start_idx+1, end_idx):
+        aligned_phrase_a = english_phrase, start_idx, i, foreign_sentence
+        aligned_phrase_b = english_phrase, i, end_idx, foreign_sentence
+
+        new_phrase_a = replace_phrase(aligned_phrase_a, True)
+        new_phrase_b = replace_phrase(aligned_phrase_b, True)
+
+        # If successful, append the set of new replace phrases to the list of those to return.
+        if new_phrase_a is not None and new_phrase_b is not None:
+            ret.append([new_phrase_a, new_phrase_b])
+
+    return ret
+
+# Helper function that appends each of the given set of phrases to a given prefix,
+# and returns a list of resulting phrase-aligned sentences.
+def append_and_duplicate(prev, phrases):
+    ret  = []
+
+    # Deep copy and flatten the list to create the prefix
+    temp = copy.deepcopy(prev)
+    temp = [item for sublist in temp for item in sublist]
+
+    # Append each phrase to the prefix, and deep copy a new prefix
+    for phrase in phrases:
+        for item in phrase:
+            temp.append(item)
+
+        ret.append(temp)
+        temp = copy.deepcopy(prev)
+        temp = [item for sublist in temp for item in sublist]
+
+    return ret
+
+# Helper function that appends a given phrase to all sentences in a list of sentences
+# (which themselves are represented as lists of phrase-aligned tuples).
+def append_to_all(ret, phrase):
+    # If the list is empty, just append the phrase as the first item
+    if len(ret) == 0:
+        ret.append([phrase])
+
+    # Otherwise, append the phrase to all sentences in the list
+    else:
+        for item in ret:
+            item.append(phrase)
+
+# Returns the set of phrase-aligned sentences from the split operation as defined in the writeup.
+def split(aligned_phrases):
+    ret = []
+
+    # For each phrase position in the given alignment, generate a new sentence in which the phrase
+    # at that position has been split, and the translations of the resulting segments are regenerated.
+    for i in xrange(len(aligned_phrases)):
+        temp = []
+        for j in xrange(len(aligned_phrases)):
+            current_phrase = aligned_phrases[j]
+
+            # Split one phrase and keep the others.
+            if i == j:
+                phrases = split_phrase(current_phrase)
+                
+                # If the splitting operation is successful, add all resulting subphrase replacements
+                # to the current working list of phrase-aligned sentences.
+                if len(phrases) > 0:
+                    temp = append_and_duplicate(temp, phrases)
+
+                # Otherwise, just add the original phrase and move on.
+                else:
+                    append_to_all(temp, current_phrase)
+
+            # Append the original phrase.
+            else:
+                append_to_all(temp, current_phrase)
+
+        # Add all resulting sentences to returned list of sentences.
+        for item in temp:
+            ret.append(item)
+
+    # DEBUG: print the resulting translations
+    if opts.verbosity > 0:
+        for line in ret:
+            print "\tSplit: ", pretty_print(line)
+        print
+
+    return ret
+
 # Returns the list of English phrases with adjacent phrases swapped. 
 def swap(aligned_phrases):
     ret = []
@@ -204,16 +290,8 @@ def swap(aligned_phrases):
         temp = []
 
         for j in xrange(len(aligned_phrases)):
-
             # Swap the phrases.
             if i == j:
-                # a = aligned_phrases[i]
-                # b = aligned_phrases[i+1]
-
-                # new_a = (b[0], a[1], a[2], a[3])
-                # new_b = (a[0], b[1], b[2], b[3])
-                # temp.append(new_a)
-                # temp.append(new_b)
                 temp.append(aligned_phrases[i+1])
                 temp.append(aligned_phrases[i])
 
@@ -249,6 +327,7 @@ def get_tm_score(foreign_substring, english_translation):
 
         return translation_probs[possible_translations.index(english_translation)]
 
+    # DEBUG: translation doesn't exist. This shouldn't happen
     except ValueError:
         print "Foreign: ", foreign_substring, "; translations: "
         for phrase in tm[foreign_substring]:
@@ -298,6 +377,8 @@ def score_phrase(phrases):
     #print "total_score: {}".format(total_score)
     return total_score
 
+# Performs the greedy hill-climbing search algorithm.
+# phrase_alignments contains the seed alignments provided by the stack decoder.
 def greedy_search(phrase_alignments):
     if opts.verbosity > 0:
         print "Original: ", pretty_print(phrase_alignments)
@@ -312,11 +393,13 @@ def greedy_search(phrase_alignments):
         s = s_current
 
         neighborhood = []
-        addAll(neighborhood, replace(current))
-        addAll(neighborhood, swap(current))
-        addAll(neighborhood, bireplace(current))
-        addAll(neighborhood, merge(current))
+        add_all(neighborhood, replace(current))     # replace
+        add_all(neighborhood, swap(current))        # swap 
+        add_all(neighborhood, bireplace(current))   # bi-replace
+        add_all(neighborhood, merge(current))       # merge
+        add_all(neighborhood, split(current))       # split
 
+        # For all hypotheses in the neighborhood, score and check if we've found a better hypothesis.
         best = None
         for h in neighborhood:
             c = score_phrase(h)
@@ -334,15 +417,15 @@ def greedy_search(phrase_alignments):
 
 # Prints a phrase-alignment data structure in human-readable form for debugging.
 def pretty_print(phrase_alignments):
+    # for x in phrase_alignments:
+    #     print x
     return " ".join([x[0] for x in phrase_alignments])
 
 # Adds all new hypotheses to a set of hypotheses.
-def addAll(neighborhood, hypotheses):
+def add_all(neighborhood, hypotheses):
     for h in hypotheses:
         neighborhood.append(h)
 
 for phrase in decoded_phrase_alignments:
     translation = greedy_search(phrase)
     print ("Translation: " if opts.verbosity > 0 else "")+pretty_print(translation)+("\n" if opts.verbosity > 0 else "")
-    #pretty_print(greedy_search(phrase))
-    #break

@@ -1,13 +1,13 @@
 # Fdb version 3
-["bibtex hw2_writeup"] 1457663708 "hw2_writeup.aux" "hw2_writeup.bbl" "hw2_writeup" 1457932635
+["bibtex hw2_writeup"] 1457998087 "hw2_writeup.aux" "hw2_writeup.bbl" "hw2_writeup" 1457998821
   "./naaclhlt2015.bst" 1457660734 25099 9e361dd593cf5bde4bcdca583d3b8ad3 ""
-  "hw2_writeup.aux" 1457932635 205 c39aaade5e71a9988bee73fe44a4bbcb ""
+  "hw2_writeup.aux" 1457998820 232 e016d67a928cd56b1795ab98e7468773 ""
   "hw2_writeup.bcf" 0 -1 0 ""
   "hw2_writeup.bib" 1457661249 243 dfa4b2a49ab39011fe38bed2d2cc11d7 ""
   (generated)
-  "hw2_writeup.blg"
   "hw2_writeup.bbl"
-["pdflatex"] 1457932634 "hw2_writeup.tex" "hw2_writeup.pdf" "hw2_writeup" 1457932635
+  "hw2_writeup.blg"
+["pdflatex"] 1457998820 "hw2_writeup.tex" "hw2_writeup.pdf" "hw2_writeup" 1457998821
   "/usr/local/texlive/2014/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2014/texmf-dist/fonts/map/fontname/texfonts.map" 1272929888 3287 e6b82fe08f5336d4d5ebc73fb1152e87 ""
   "/usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1136768653 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -74,11 +74,11 @@
   "/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1401025944 1445653 26a0aacf3d70032b1ec192e8c7792117 ""
   "/usr/local/texlive/2014/texmf-var/web2c/pdftex/pdflatex.fmt" 1401025990 3832012 904d82bdcc8abf2b1cd296990b82553b ""
   "/usr/local/texlive/2014/texmf.cnf" 1401025936 577 a59edbde8d3a8c549d0eeaab1739e2ff ""
-  "hw2_writeup.aux" 1457932635 205 c39aaade5e71a9988bee73fe44a4bbcb ""
-  "hw2_writeup.bbl" 1457663709 316 ceab6501302d6a61904d2341cbb93e09 "bibtex hw2_writeup"
-  "hw2_writeup.tex" 1457932634 3828 fbb31e231330f470ad576f30cc5f12d1 ""
+  "hw2_writeup.aux" 1457998820 232 e016d67a928cd56b1795ab98e7468773 ""
+  "hw2_writeup.bbl" 1457998087 316 ceab6501302d6a61904d2341cbb93e09 "bibtex hw2_writeup"
+  "hw2_writeup.tex" 1457998820 4446 b20733332b661da3e97cc5ac426ed6ff ""
   "naaclhlt2015.sty" 1457660734 14193 ce00f2282000d13009393166e999d81b ""
   (generated)
-  "hw2_writeup.log"
-  "hw2_writeup.aux"
   "hw2_writeup.pdf"
+  "hw2_writeup.aux"
+  "hw2_writeup.log"

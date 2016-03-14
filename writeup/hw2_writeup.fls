@@ -103,9 +103,9 @@ INPUT /usr/local/texlive/2014/texmf-dist/fonts/vf/adobe/courier/pcrr7t.vf
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/vf/adobe/times/ptmri7t.vf
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/times/ptmri8r.tfm
-INPUT hw2_writeup.bbl
-INPUT hw2_writeup.bbl
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/times/ptmr7t.tfm
+INPUT hw2_writeup.bbl
+INPUT hw2_writeup.bbl
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/times/ptmri7t.tfm
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/vf/adobe/times/ptmr7t.vf
 INPUT /usr/local/texlive/2014/texmf-dist/fonts/tfm/adobe/times/ptmr8r.tfm

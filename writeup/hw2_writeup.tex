@@ -68,13 +68,13 @@ define the {\tt neighborhood} function, which takes a candidate translation as a
 returns a set of neighboring hypotheses to consider. 
 
 \subsection{Neighborhood Function}
-The neighborhood function is defined via s set of six operations that can transform a current translation,
+The neighborhood function is defined via a set of five operations that can transform a current translation,
 as defined by~\cite{langlais2007greedy}.
 
 \paragraph{Swap} The \textit{swap} operation swaps two adjacent target segments. This is designed to combat
 the baseline model's strong bias toward monotonous translations.
 
-\paragraph{Replace} Given a specific source segment, the \textit{replace} operator exchanges the translation
+\paragraph{Replace} Given a specific source segment, the \textit{replace} operation exchanges the translation
 for that segment with anther found in the phrase translation table.
 
 \paragraph{Bi-Replace} The \textit{bi-replace} operation works similarly to \textit{replace}, allowing the
@@ -90,7 +90,21 @@ translation table.
 
 
 \section{Results}
+Due to the randomness inherent in our \textit{replace} operations, we take an average over five runs of our implementation
+on the provided corpus. We compare the log likelihood of the corpus under our model against the log likelihood of the corpus
+returned by the given stack decoder. The results are shown in Table~\ref{results}.
 
+\begin{table}
+\begin{center}
+\begin{tabular}{|l||c|}
+\hline
+Model & Log-Likelihood of Corpus \\ \hline\hline
+Stack Decoder & -1439.874 \\ \hline
+Greedy Decoder & -1362.362 \\ \hline
+\end{tabular}
+\end{center}
+\caption{\label{results} Results of different decoding models.}
+\end{table}
 
 \bibliographystyle{naaclhlt2015}
 \bibliography{hw2_writeup}
