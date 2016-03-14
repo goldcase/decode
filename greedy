@@ -8,19 +8,6 @@ import random
 import numpy as np
 import copy
 
-# Three little utility functions:
-# def bitmap(sequence):
-#     """ Generate a coverage bitmap for a sequence of indexes """
-#     return reduce(lambda x,y: x|y, map(lambda i: long('1'+'0'*i,2), sequence), 0)
-
-# def bitmap2str(b, n, on='o', off='.'):
-#     """ Generate a length-n string representation of bitmap b """
-#     return '' if n==0 else (on if b&1==1 else off) + bitmap2str(b>>1, n-1, on, off)
-
-# def logadd10(x,y):
-#     """ Addition in logspace (base 10): if x=log(a) and y=log(b), returns log(a+b) """
-#     return x + math.log10(1 + pow(10,y-x))
-
 optparser = optparse.OptionParser()
 optparser.add_option("-i", "--input", dest="input", default="data/input",
                                          help="File containing sentences to translate (default=data/input)")
