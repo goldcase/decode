@@ -1,3 +1,5 @@
+Updated README: instead of `decode`, please run `greedy` (`./greedy | ./grade`) for our implementation.
+
 There are two python programs here (-h for usage):
 
 -`decode` translates input sentences from French to English.
