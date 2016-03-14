@@ -58,7 +58,8 @@ for word in set(sum(french,())):
 #         sys.stdout.flush()
 
 # Helper method which replaces one translated phrase with another, if possible.
-def replace_phrase(aligned_phrase):
+# Force: forces replacement of a phrase even if there is only one possible translation for a phrase. Used in merge.
+def replace_phrase(aligned_phrase, force):
     #print "Entering replace_phrase() with " + str(aligned_phrase)
     ret = aligned_phrase
 
@@ -78,9 +79,11 @@ def replace_phrase(aligned_phrase):
         print "\tOnly one translation found for source phrase ", source_phrase, ": ", english_phrase
 
     # Replace translated phrase with a randomly chosen, different translated phrase
-    if source_phrase in tm and len(tm[source_phrase]) > 1:
+    if source_phrase in tm and (len(tm[source_phrase]) > 1 or force):
         while replaced_phrase == english_phrase:
             replaced_phrase = random.choice(tm[source_phrase]).english
+            if len(tm[source_phrase] == 1) and force:
+                break
 
     return replaced_phrase, start_idx, end_idx, foreign_sentence
 
@@ -98,7 +101,7 @@ def replace(aligned_phrases):
 
             # Replace one phrase and keep the others.
             if i == j:
-                new_phrase = replace_phrase(current_phrase)
+                new_phrase = replace_phrase(current_phrase, False)
                 assert new_phrase is not None
                 temp.append(new_phrase)
             else:
@@ -126,8 +129,8 @@ def bireplace(aligned_phrases):
 
             # Replace two phrases.
             if i == j:
-                new_phrase_a = replace_phrase(aligned_phrases[i])
-                new_phrase_b = replace_phrase(aligned_phrases[i+1])
+                new_phrase_a = replace_phrase(aligned_phrases[i], False)
+                new_phrase_b = replace_phrase(aligned_phrases[i+1], False)
                 assert new_phrase_a is not None and new_phrase_b is not None
                 temp.append(new_phrase_a)
                 temp.append(new_phrase_b)
@@ -162,7 +165,7 @@ def merge(aligned_phrases):
                 a = aligned_phrases[i]
                 b = aligned_phrases[i+1]
                 merged = a[0]+" "+b[0], a[1], b[2], b[3]
-                new_phrase = replace_phrase(merged)
+                new_phrase = replace_phrase(merged, True)
 
                 if new_phrase is not None:
                     temp.append(new_phrase)
@@ -235,15 +238,21 @@ def swap(aligned_phrases):
 def get_tm_score(foreign_substring, english_translation):
     assert foreign_substring in tm
 
-    tm_entries            = tm[foreign_substring]
-    possible_translations = []
-    translation_probs     = []
+    try:
+        tm_entries            = tm[foreign_substring]
+        possible_translations = []
+        translation_probs     = []
 
-    for phrase in tm_entries:
-        possible_translations.append(phrase.english)
-        translation_probs.append(phrase.logprob)
+        for phrase in tm_entries:
+            possible_translations.append(phrase.english)
+            translation_probs.append(phrase.logprob)
 
-    return translation_probs[possible_translations.index(english_translation)]
+        return translation_probs[possible_translations.index(english_translation)]
+
+    except ValueError:
+        print "Foreign: ", foreign_substring, "; translations: "
+        for phrase in tm[foreign_substring]:
+            print phrase.english, " ",
 
 # Calculates the translation model score for a set of phrase translations making up a sentence.
 def tm_score(phrases):
