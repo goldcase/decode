@@ -71,12 +71,6 @@ returns a set of neighboring hypotheses to consider.
 The neighborhood function is defined via s set of six operations that can transform a current translation,
 as defined by~\cite{langlais2007greedy}.
 
-\paragraph{Move} The \textit{move} operation allows some target phrases to move within the current translation.
-This operation is designed to target ill-formed translations resulting from postponing the processing of
-hard-to-translate segments. In our implementation of \textit{move}, whenever two adjacent source phrases
-are translated by phrases that are further than 3 words from the source indices, we consider
-moving one of the translations closer to the other.
-
 \paragraph{Swap} The \textit{swap} operation swaps two adjacent target segments. This is designed to combat
 the baseline model's strong bias toward monotonous translations.
 

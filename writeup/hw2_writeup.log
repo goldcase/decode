@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  10 MAR 2016 20:45
+This is pdfTeX, Version 3.14159265-2.6-1.40.15 (TeX Live 2014) (preloaded format=pdflatex 2014.5.25)  14 MAR 2016 00:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -170,12 +170,6 @@ Underfull \hbox (badness 6445) in paragraph at lines 27--33
 
 LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <10.95> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 37.
-
-Underfull \hbox (badness 1342) in paragraph at lines 74--79
- \OT1/ptm/b/n/10.95 Move \OT1/ptm/m/n/10.95 The \OT1/ptm/m/it/10.95 move \OT1/p
-tm/m/n/10.95 op-er-a-tion al-lows some tar-get
- []
-
 [1{/usr/local/texlive/2014/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 
@@ -188,7 +182,7 @@ tm/m/n/10.95 op-er-a-tion al-lows some tar-get
 Here is how much of TeX's memory you used:
  1621 strings out of 493117
  20925 string characters out of 6135433
- 80614 words of memory out of 5000000
+ 79614 words of memory out of 5000000
  5081 multiletter control sequences out of 15000+600000
  27184 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -203,7 +197,7 @@ b></usr/local/texlive/2014/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb></usr/
 local/texlive/2014/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texl
 ive/2014/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2014/t
 exmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on hw2_writeup.pdf (2 pages, 97351 bytes).
+Output written on hw2_writeup.pdf (2 pages, 96728 bytes).
 PDF statistics:
  48 PDF objects out of 1000 (max. 8388607)
  34 compressed objects within 1 object stream

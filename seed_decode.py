@@ -15,11 +15,11 @@ optparser.add_option("-v", "--verbose", dest="verbose", action="store_true", def
 opts = optparser.parse_args()[0]
 
 
-def decode():
+def decode(n):
     ret = []
     tm = models.TM(opts.tm, opts.k)
     lm = models.LM(opts.lm)
-    french = [tuple(line.strip().split()) for line in open(opts.input).readlines()[:opts.num_sents]]
+    french = [tuple(line.strip().split()) for line in open(opts.input).readlines()[:min(n,opts.num_sents)]]
 
     # tm should translate unknown words as-is with probability 1
     for word in set(sum(french,())):
